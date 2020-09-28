@@ -80,6 +80,16 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--
+            - Maven Central URL : https://mvnrepository.com/artifact/jakarta.validation/jakarta.validation-api
+            - [용석:2020-08-21] : Java Bean객체의 기본 유효성 검사를 위한 spring-boot-starter-validation 추가
+            - 참고 URL : https://meetup.toast.com/posts/223
+        -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
