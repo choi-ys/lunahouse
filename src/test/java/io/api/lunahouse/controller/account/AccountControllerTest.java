@@ -2,6 +2,7 @@ package io.api.lunahouse.controller.account;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.api.lunahouse.domain.account.dto.SignUpForm;
+import io.api.lunahouse.domain.account.entity.Account;
 import io.api.lunahouse.repository.AccountRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -42,6 +44,8 @@ class AccountControllerTest {
     @MockBean
     JavaMailSender javaMailSender;
 
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @DisplayName("Account : 회원 가입 화면 출력")
     @Test
@@ -119,7 +123,11 @@ class AccountControllerTest {
                 .andExpect(view().name("redirect:/"))
         ;
 
-        assertThat(accountRepository.existsByEmail(email));
+        Account account = accountRepository.findByEmail(email);
+        assertThat(account).isNotNull();
+        assertThat(account.getPassword()).isNotEqualTo(password); // 비밀번호 암호화 여부 확인
+        assertThat(account.getEmailCheckToken()).isNotNull();
+
         then(javaMailSender).should().send(any(SimpleMailMessage.class));
     }
 }

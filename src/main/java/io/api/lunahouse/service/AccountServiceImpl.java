@@ -6,7 +6,9 @@ import io.api.lunahouse.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -14,8 +16,10 @@ public class AccountServiceImpl implements AccountService{
 
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public Account processNewAccount(SignUpForm signUpForm) {
         Account createdAccount = this.saveNewAccount(signUpForm);
 
@@ -28,7 +32,7 @@ public class AccountServiceImpl implements AccountService{
         Account account = Account.builder()
                 .email(signUpForm.getEmail())
                 .engName(signUpForm.getEngName())
-                .password(signUpForm.getPassword())
+                .password(passwordEncoder.encode(signUpForm.getPassword()))
                 .emailVerified(false)
                 .eventCreatedByWeb(true)
                 .eventEnrollmentResultByWeb(true)
