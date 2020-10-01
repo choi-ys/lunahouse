@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.api.lunahouse.domain.account.dto.SignUpForm;
 import io.api.lunahouse.domain.account.entity.Account;
 import io.api.lunahouse.repository.AccountRepository;
+import io.api.lunahouse.service.AccountService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,13 +43,21 @@ class AccountControllerTest {
     @Autowired
     AccountRepository accountRepository;
 
+    @Autowired
+    AccountService accountService;
+
     @MockBean
     JavaMailSender javaMailSender;
 
     @Autowired
     PasswordEncoder passwordEncoder;
 
-    @DisplayName("Account : 회원 가입 화면 출력")
+    @BeforeEach
+    void setUpRepository(){
+        accountRepository.deleteAll();
+    }
+
+    @DisplayName("SignUp : 회원 가입 화면 출력")
     @Test
     void signUpForm() throws Exception {
 
@@ -66,7 +76,57 @@ class AccountControllerTest {
         ;
     }
 
-    @DisplayName("Account : 입력값이 잘못된 요청")
+    @DisplayName("SignUp : 입력값이 잘못된 이메일 인증 요청")
+    @Test
+    void checkEmailToken_wrongParameter() throws Exception {
+        // Given
+        String token = "";
+        String email = "";
+
+        String urlTemplate = "/check-email-token";
+        ResultActions resultActions = this.mockMvc.perform(get(urlTemplate)
+                .param("token", token)
+                .param("email", email)
+        );
+
+        resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/checked-email"))
+                .andExpect(model().attributeExists("error"))
+        ;
+    }
+
+    @DisplayName("SignUp : 이메일 인증 요청")
+    @Test
+    void checkEmailToken() throws Exception {
+        // Given
+        String engName = "noel";
+        String email = "yschoi@lunasoft.co.kr";
+        String password = "chldydtjr1!";
+
+        SignUpForm signUpForm = new SignUpForm();
+        signUpForm.setEmail(email);
+        signUpForm.setEngName(engName);
+        signUpForm.setPassword(password);
+
+        Account createdAccount = accountService.processNewAccount(signUpForm);
+        createdAccount.getEmailCheckToken();
+
+        String urlTemplate = "/check-email-token";
+        ResultActions resultActions = this.mockMvc.perform(get(urlTemplate)
+                .param("token", createdAccount.getEmailCheckToken())
+                .param("email", email)
+        );
+
+        resultActions.andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(view().name("account/checked-email"))
+                .andExpect(model().attributeDoesNotExist("error"))
+        ;
+    }
+
+
+    @DisplayName("SignUp : 입력값이 잘못된 요청")
     @Test
     void signUpSubmit_wrongParameter_request() throws Exception {
         // Given
@@ -97,7 +157,7 @@ class AccountControllerTest {
 
     }
 
-    @DisplayName("Account : 회원 가입 요청")
+    @DisplayName("SignUp : 회원 가입 요청")
     @Test
     void signUpSubmit() throws Exception {
         // Given
