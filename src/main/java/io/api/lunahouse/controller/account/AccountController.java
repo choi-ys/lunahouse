@@ -57,7 +57,7 @@ public class AccountController {
     @GetMapping("/check-email-token")
     public String checkEmailToken(String token, String email, Model model){
         Account account = accountRepository.findByEmail(email);
-        String view = "account/checkedEmail";
+        String view = "account/checked-email";
 
         if(null == account){
             model.addAttribute("error", "not exist email");
@@ -69,8 +69,7 @@ public class AccountController {
             return view;
         }
 
-        account.setEmailVerified(true);
-        account.setJoinedAt(LocalDateTime.now());
+        account.completeSignUp();
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("engName", account.getEngName());
         return view;
