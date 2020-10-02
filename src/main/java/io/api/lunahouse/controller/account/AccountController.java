@@ -48,7 +48,8 @@ public class AccountController {
             return "account/sign-up";
         }
 
-        accountService.processNewAccount(signUpForm);
+        Account createdAccount = accountService.processNewAccount(signUpForm);
+        accountService.login(createdAccount);
 
         // 회원가입 완료 시
         return "redirect:/";
@@ -64,12 +65,14 @@ public class AccountController {
             return view;
         }
 
-        if(!token.equals(account.getEmailCheckToken())){
+        if(!account.isValidToken(token)){
             model.addAttribute("error", "wrong toekn");
             return view;
         }
 
         account.completeSignUp();
+        accountService.login(account);
+
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("engName", account.getEngName());
         return view;

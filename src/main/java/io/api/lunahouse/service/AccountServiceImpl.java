@@ -6,9 +6,14 @@ import io.api.lunahouse.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,5 +54,16 @@ public class AccountServiceImpl implements AccountService{
         simpleMailMessage.setText("/check-email-token?token="+createdAccount.getEmailCheckToken() +"&email="+createdAccount.getEmail());
 
         javaMailSender.send(simpleMailMessage);
+    }
+
+    @Override
+    public void login(Account createdAccount) {
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+                createdAccount.getEngName(),
+                createdAccount.getPassword(),
+                List.of(new SimpleGrantedAuthority("ROLE_USER"))
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 }
