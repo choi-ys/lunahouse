@@ -24,6 +24,7 @@ import java.nio.charset.StandardCharsets;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -33,7 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 class AccountControllerTest {
-
     @Autowired
     MockMvc mockMvc;
 
@@ -73,6 +73,7 @@ class AccountControllerTest {
             .andExpect(status().isOk())
             .andExpect(view().name("account/sign-up"))
             .andExpect(model().attributeExists("signUpForm"))
+            .andExpect(unauthenticated())
         ;
     }
 
@@ -93,6 +94,7 @@ class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/checked-email"))
                 .andExpect(model().attributeExists("error"))
+                .andExpect(unauthenticated())
         ;
     }
 
@@ -122,11 +124,12 @@ class AccountControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(view().name("account/checked-email"))
                 .andExpect(model().attributeDoesNotExist("error"))
+                .andExpect(authenticated().withUsername(engName))
         ;
     }
 
 
-    @DisplayName("SignUp : 입력값이 잘못된 요청")
+    @DisplayName("SignUp : 입력값이 잘못된 회원 가입 요청")
     @Test
     void signUpSubmit_wrongParameter_request() throws Exception {
         // Given
@@ -153,6 +156,7 @@ class AccountControllerTest {
         resultActions.andDo(print())
             .andExpect(status().isOk())
             .andExpect(view().name("account/sign-up"))
+            .andExpect(unauthenticated())
         ;
 
     }
@@ -181,6 +185,7 @@ class AccountControllerTest {
         resultActions.andDo(print())
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/"))
+                .andExpect(authenticated().withUsername(engName))
         ;
 
         Account account = accountRepository.findByEmail(email);

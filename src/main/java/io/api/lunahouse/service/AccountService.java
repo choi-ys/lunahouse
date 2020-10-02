@@ -7,4 +7,5 @@ public interface AccountService {
 
     Account processNewAccount(SignUpForm signUpForm);
 
+    void login(Account account);
 }
