@@ -8,7 +8,8 @@
     <nav th:replace="common/fragments.html :: main-navigation"></nav>
 
     <div class="alert alert-warning" role="alert" th:if="${account != null && !account?.emailVerified}">
-        루나하우스 가입을 완료하려면 <a href="#" th:href="@{/check-email}" class="alert-link">계정 인증 이메일을 확인</a>하세요.
+        동아리 개설 및 참여를 위해서는 반드시
+        <a href="#" th:href="@{/check-email-auth}" class="alert-link">이메일 인증</a>을 완료해야만 합니다.
     </div>
 
     <div class="container">
