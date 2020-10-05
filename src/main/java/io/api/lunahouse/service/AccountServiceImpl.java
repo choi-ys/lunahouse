@@ -2,6 +2,7 @@ package io.api.lunahouse.service;
 
 import io.api.lunahouse.domain.account.dto.SignUpForm;
 import io.api.lunahouse.domain.account.entity.Account;
+import io.api.lunahouse.domain.account.entity.UserAccount;
 import io.api.lunahouse.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -59,7 +60,7 @@ public class AccountServiceImpl implements AccountService{
     @Override
     public void login(Account createdAccount) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                createdAccount.getEngName(),
+                new UserAccount(createdAccount),
                 createdAccount.getPassword(),
                 List.of(new SimpleGrantedAuthority("ROLE_USER"))
         );
