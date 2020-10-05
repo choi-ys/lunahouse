@@ -3,20 +3,23 @@
 <head th:replace="common/fragments.html :: header"></head>
 <body>
     <nav th:replace="common/fragments.html :: main-navigation"></nav>
-    <div class="py-5 text-center" th:if="${error}">
-        <p class="lead">루나하우스 이메일 인증 확인</p>
-        <div class="alert alert-danger" role="alert">
-            이메일 확인 링크가 정확하지 않습니다.
-        </div>
-    </div>
 
-    <div class="py-5 text-center" th:if="${error == null}">
-        <p class="lead">루나하우스 이메일 인증 확인</p>
-        <h2>
-            <span th:text="${engName}"></span>님 이메일 인증이 완료 되었습니다.
-            <span th:text="${numberOfUser}"></span>번째 회원 가입을 축하합니다.
-        </h2>
-       <small class="text-info">회원가입 시 입력한 영어이름과 패스워드로 로그인 하실 수 있습니다.</small>
+    <div>
+        <div class="py-5 text-center" th:if="${error}">
+            <p class="lead">루나하우스 이메일 인증 확인</p>
+            <div class="alert alert-danger" role="alert">
+                이메일 확인 링크가 정확하지 않습니다.
+            </div>
+        </div>
+
+        <div class="py-5 text-center" th:if="${error == null}">
+            <p class="lead">루나하우스 이메일 인증 확인</p>
+            <h2>
+                <span th:text="${engName}"></span>님 이메일 인증이 완료 되었습니다.
+                <span th:text="${numberOfUser}"></span>번째 회원 가입을 축하합니다.
+            </h2>
+            <small class="text-info">회원가입 시 입력한 영어이름과 패스워드로 로그인 하실 수 있습니다.</small>
+        </div>
     </div>
 
     <footer th:replace="common/fragments.html :: footer"></footer>

@@ -29,13 +29,15 @@ public class AccountServiceImpl implements AccountService{
     public Account processNewAccount(SignUpForm signUpForm) {
         Account createdAccount = this.saveNewAccount(signUpForm);
 
-        createdAccount.generateEmailToken();
+//        createdAccount.generateEmailToken();
         this.sendSignUpConfirmEmail(createdAccount);
         return createdAccount;
     }
 
     @Override
     public void sendSignUpConfirmEmail(Account createdAccount) {
+        createdAccount.generateEmailToken();
+
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(createdAccount.getEmail());
         simpleMailMessage.setSubject("[루나하우스] 회원 가입 인증 메일입니다.");
