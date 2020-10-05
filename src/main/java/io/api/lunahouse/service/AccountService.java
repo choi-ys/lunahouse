@@ -7,5 +7,7 @@ public interface AccountService {
 
     Account processNewAccount(SignUpForm signUpForm);
 
+    void sendSignUpConfirmEmail(Account createdAccount);
+
     void login(Account account);
 }

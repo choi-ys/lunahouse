@@ -5,6 +5,7 @@ import io.api.lunahouse.domain.account.dto.SignUpFormValidator;
 import io.api.lunahouse.domain.account.entity.Account;
 import io.api.lunahouse.repository.AccountRepository;
 import io.api.lunahouse.service.AccountServiceImpl;
+import io.api.lunahouse.util.annotation.CurrentUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
-import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
@@ -76,7 +76,39 @@ public class AccountController {
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("engName", account.getEngName());
         return view;
+    }
 
+    @GetMapping("check-email-auth")
+    public String checkEmail(@CurrentUser Account account, Model model){
+        String view = "account/check-email-auth";
+
+        if(null == account){
+            model.addAttribute("error", "not exist email");
+            return view;
+        }
+
+        model.addAttribute(account);
+        model.addAttribute("engName", account.getEngName());
+        model.addAttribute("email", account.getEmail());
+        return view;
+    }
+
+    @GetMapping("resend-confirm-email")
+    public String resendConfirmEmail(@CurrentUser Account account, Model model){
+        String view = "account/check-email-auth";
+
+        if(null == account){
+            model.addAttribute("error", "유효하지 못한 사용자의 요청입니다.");
+            return view;
+        }
+
+        model.addAttribute(account);
+        if(!account.canSendConfirmEmail()){
+            model.addAttribute("error", "인증 이메일은 1시간에 한번만 전송할 수 있습니다.");
+        }
+
+        accountService.sendSignUpConfirmEmail(account);
+        return "redirect:/";
 
     }
 

@@ -17,6 +17,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .mvcMatchers("/"
                         , "sign-up"
                         , "check-email-token"
+                        , "check-email-auth"
                     )
                     .permitAll()
                 .anyRequest()

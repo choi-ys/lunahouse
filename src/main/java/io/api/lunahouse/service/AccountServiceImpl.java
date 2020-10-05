@@ -34,6 +34,16 @@ public class AccountServiceImpl implements AccountService{
         return createdAccount;
     }
 
+    @Override
+    public void sendSignUpConfirmEmail(Account createdAccount) {
+        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+        simpleMailMessage.setTo(createdAccount.getEmail());
+        simpleMailMessage.setSubject("[루나하우스] 회원 가입 인증 메일입니다.");
+        simpleMailMessage.setText("/check-email-token?token="+createdAccount.getEmailCheckToken() +"&email="+createdAccount.getEmail());
+
+        javaMailSender.send(simpleMailMessage);
+    }
+
     private Account saveNewAccount(SignUpForm signUpForm) {
         Account account = Account.builder()
                 .email(signUpForm.getEmail())
@@ -46,15 +56,6 @@ public class AccountServiceImpl implements AccountService{
                 .build();
 
         return accountRepository.save(account);
-    }
-
-    private void sendSignUpConfirmEmail(Account createdAccount) {
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-        simpleMailMessage.setTo(createdAccount.getEmail());
-        simpleMailMessage.setSubject("[루나하우스] 회원 가입 인증 메일입니다.");
-        simpleMailMessage.setText("/check-email-token?token="+createdAccount.getEmailCheckToken() +"&email="+createdAccount.getEmail());
-
-        javaMailSender.send(simpleMailMessage);
     }
 
     @Override
