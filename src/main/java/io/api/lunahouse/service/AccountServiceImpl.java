@@ -10,6 +10,9 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl implements AccountService{
+public class AccountServiceImpl implements AccountService, UserDetailsService {
 
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
@@ -69,5 +72,19 @@ public class AccountServiceImpl implements AccountService{
         );
 
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String emailOrEngName) throws UsernameNotFoundException {
+        Account account = accountRepository.findByEmail(emailOrEngName);
+        if(account == null){
+            account = accountRepository.findByEngName(emailOrEngName);
+        }
+
+        if(account == null){
+            throw new UsernameNotFoundException(emailOrEngName);
+        }
+
+        return new UserAccount(account);
     }
 }
