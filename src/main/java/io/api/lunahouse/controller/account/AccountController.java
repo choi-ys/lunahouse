@@ -105,6 +105,8 @@ public class AccountController {
         model.addAttribute(account);
         if(!account.canSendConfirmEmail()){
             model.addAttribute("error", "인증 이메일은 1시간에 한번만 전송할 수 있습니다.");
+            model.addAttribute("canSendConfirmEmailDateTime", account.getEmailCheckToeknGeneratedAt().plusHours(1));
+            return view;
         }
 
         accountService.sendSignUpConfirmEmail(account);
