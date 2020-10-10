@@ -32,7 +32,6 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
     public Account processNewAccount(SignUpForm signUpForm) {
         Account createdAccount = this.saveNewAccount(signUpForm);
 
-//        createdAccount.generateEmailToken();
         this.sendSignUpConfirmEmail(createdAccount);
         return createdAccount;
     }
