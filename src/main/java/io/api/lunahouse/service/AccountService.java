@@ -16,4 +16,6 @@ public interface AccountService extends UserDetailsService {
 
     @Override
     UserDetails loadUserByUsername(String s) throws UsernameNotFoundException;
+
+    void completeSignUp(Account account);
 }
