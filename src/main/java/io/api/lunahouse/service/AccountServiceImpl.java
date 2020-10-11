@@ -21,14 +21,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AccountServiceImpl implements AccountService, UserDetailsService {
+@Transactional
+public class AccountServiceImpl implements UserDetailsService, AccountService{
 
     private final AccountRepository accountRepository;
     private final JavaMailSender javaMailSender;
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    @Transactional
     public Account processNewAccount(SignUpForm signUpForm) {
         Account createdAccount = this.saveNewAccount(signUpForm);
 
@@ -73,6 +73,13 @@ public class AccountServiceImpl implements AccountService, UserDetailsService {
         SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 
+    @Override
+    public void completeSignUp(Account account) {
+        account.completeSignUp();
+        this.login(account);
+    }
+
+    @Transactional(readOnly = true)
     @Override
     public UserDetails loadUserByUsername(String emailOrEngName) throws UsernameNotFoundException {
         Account account = accountRepository.findByEmail(emailOrEngName);

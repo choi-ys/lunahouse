@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.validation.Valid;
@@ -70,8 +71,7 @@ public class AccountController {
             return view;
         }
 
-        account.completeSignUp();
-        accountService.login(account);
+        accountService.completeSignUp(account);
 
         model.addAttribute("numberOfUser", accountRepository.count());
         model.addAttribute("engName", account.getEngName());
@@ -111,7 +111,21 @@ public class AccountController {
 
         accountService.sendSignUpConfirmEmail(account);
         return "redirect:/";
+    }
 
+    @GetMapping("/profile/{engName}")
+    public String viewProfile(@PathVariable String engName
+                              ,Model model
+                              ,@CurrentUser Account account
+    ){
+        Account byEngName = accountRepository.findByEngName(engName);
+        if(byEngName == null){
+            throw  new IllegalArgumentException(engName + "에 해당하는 사용자가 없습니다.");
+        }
+
+        model.addAttribute(byEngName);
+        model.addAttribute("isOwner", byEngName.equals(account));
+        return "account/profile";
     }
 
 }
