@@ -42,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout()
                 .logoutSuccessUrl("/");
         http.rememberMe()
-                .userDetailsService(accountService)
+                .userDetailsService((UserDetailsService) accountService)
                 .tokenRepository(tokenRepository());
 
     }

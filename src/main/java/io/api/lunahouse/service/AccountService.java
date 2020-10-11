@@ -1,12 +1,10 @@
 package io.api.lunahouse.service;
 
+import io.api.lunahouse.domain.account.dto.Profile;
 import io.api.lunahouse.domain.account.dto.SignUpForm;
 import io.api.lunahouse.domain.account.entity.Account;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-public interface AccountService extends UserDetailsService {
+public interface AccountService {
 
     Account processNewAccount(SignUpForm signUpForm);
 
@@ -14,8 +12,7 @@ public interface AccountService extends UserDetailsService {
 
     void login(Account account);
 
-    @Override
-    UserDetails loadUserByUsername(String s) throws UsernameNotFoundException;
-
     void completeSignUp(Account account);
+
+    void updateProfile(Account account, Profile profile);
 }

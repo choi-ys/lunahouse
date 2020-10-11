@@ -36,9 +36,12 @@ public class Account {
 
     // 가입일자
     private LocalDateTime joinedAt;
-    
-    // 상태 메세지
-    private String statusMessage;
+
+    // 사용자 프로필 정보
+    private String statusMessage; // 상태 메세지
+    private String url; // 개인 URL
+    private String team; // 소속 Team
+    private String location; // 위치
 
     // 프로필 이미지
     @Lob // String Type의 기본 Column은 varchar(255)로 설정되므로, 이보다 길어질 수 있는 URL항목은 @Lob을 이용 하여 Text로 Mapping 되도록 설정

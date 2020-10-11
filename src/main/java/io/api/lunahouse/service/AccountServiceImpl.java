@@ -1,5 +1,6 @@
 package io.api.lunahouse.service;
 
+import io.api.lunahouse.domain.account.dto.Profile;
 import io.api.lunahouse.domain.account.dto.SignUpForm;
 import io.api.lunahouse.domain.account.entity.Account;
 import io.api.lunahouse.domain.account.entity.UserAccount;
@@ -20,8 +21,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 @Transactional
+@RequiredArgsConstructor
 public class AccountServiceImpl implements UserDetailsService, AccountService{
 
     private final AccountRepository accountRepository;
@@ -92,5 +93,14 @@ public class AccountServiceImpl implements UserDetailsService, AccountService{
         }
 
         return new UserAccount(account);
+    }
+
+    @Override
+    public void updateProfile(Account account, Profile profile) {
+        account.setStatusMessage(profile.getStatusMessage());
+        account.setUrl(profile.getUrl());
+        account.setTeam(profile.getTeam());
+        account.setLocation(profile.getLocation());
+        accountRepository.save(account);
     }
 }
