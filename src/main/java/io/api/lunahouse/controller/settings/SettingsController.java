@@ -21,8 +21,8 @@ public class SettingsController {
 
     private final AccountService accountService;
 
-    public static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
-    public static final String SETTINGS_PROFILE_URL = "/settings/profile";
+    static final String SETTINGS_PROFILE_VIEW_NAME = "settings/profile";
+    static final String SETTINGS_PROFILE_URL = "/settings/profile";
 
     @GetMapping(SETTINGS_PROFILE_URL)
     public String profileUpdateForm(@CurrentUser Account account, Model model){
@@ -42,7 +42,7 @@ public class SettingsController {
                                 , Errors errors
                                 , Model model
                                 , RedirectAttributes redirectAttributes
-    ) throws JsonProcessingException {
+    ) {
         if(errors.hasErrors()){
             model.addAttribute(account);
             return SETTINGS_PROFILE_VIEW_NAME;
