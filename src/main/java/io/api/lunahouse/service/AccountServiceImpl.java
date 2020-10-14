@@ -104,4 +104,10 @@ public class AccountServiceImpl implements UserDetailsService, AccountService{
         account.setProfileImage(profile.getProfileImage());
         accountRepository.save(account);
     }
+
+    @Override
+    public void updatePassword(Account account, String newPassword) {
+        account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+    }
 }

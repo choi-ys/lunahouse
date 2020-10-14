@@ -33,13 +33,18 @@ public class AccountController {
      * 회원 가입 화면 Controller
      */
     @GetMapping("/sign-up")
-    public String signUpForm(Model model){
+    public String signUpForm(@CurrentUser Account account, Model model){
+        // 로그인 상태로 회원 가입 화면 요청 시
+        if(account != null){
+            return "redirect:/";
+        }
+
         model.addAttribute(new SignUpForm());
         return "account/sign-up";
     }
 
     @PostMapping("/sign-up")
-    public String signUpSubmit(@Valid SignUpForm signUpForm, Errors errors){
+    public String signUpSubmit(@CurrentUser Account account, @Valid SignUpForm signUpForm, Errors errors){
         if(errors.hasErrors()){
             return "account/sign-up";
         }
@@ -48,6 +53,8 @@ public class AccountController {
         if(errors.hasErrors()){
             return "account/sign-up";
         }
+
+
 
         Account createdAccount = accountService.processNewAccount(signUpForm);
         accountService.login(createdAccount);

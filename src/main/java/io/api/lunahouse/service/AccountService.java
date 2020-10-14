@@ -19,4 +19,6 @@ public interface AccountService {
     void updateProfile(Account account, Profile profile);
 
     public UserDetails loadUserByUsername(String emailOrEngName) throws UsernameNotFoundException;
+
+    void updatePassword(Account account, String newPassword);
 }
