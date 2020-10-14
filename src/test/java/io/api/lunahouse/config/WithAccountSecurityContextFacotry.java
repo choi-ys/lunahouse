@@ -1,6 +1,6 @@
 package io.api.lunahouse.config;
 
-import io.api.lunahouse.domain.account.dto.SignUpForm;
+import io.api.lunahouse.domain.account.dto.account.SignUpForm;
 import io.api.lunahouse.service.AccountService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

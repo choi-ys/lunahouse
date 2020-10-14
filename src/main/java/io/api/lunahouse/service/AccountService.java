@@ -1,8 +1,8 @@
 package io.api.lunahouse.service;
 
-import io.api.lunahouse.domain.account.dto.Profile;
-import io.api.lunahouse.domain.account.dto.SignUpForm;
-import io.api.lunahouse.domain.account.entity.Account;
+import io.api.lunahouse.domain.account.dto.settings.Profile;
+import io.api.lunahouse.domain.account.dto.account.SignUpForm;
+import io.api.lunahouse.domain.account.entity.account.Account;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 

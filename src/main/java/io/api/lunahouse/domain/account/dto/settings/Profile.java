@@ -1,6 +1,6 @@
-package io.api.lunahouse.domain.account.dto;
+package io.api.lunahouse.domain.account.dto.settings;
 
-import io.api.lunahouse.domain.account.entity.Account;
+import io.api.lunahouse.domain.account.entity.account.Account;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

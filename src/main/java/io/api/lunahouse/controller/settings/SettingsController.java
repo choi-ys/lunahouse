@@ -1,10 +1,9 @@
 package io.api.lunahouse.controller.settings;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import io.api.lunahouse.domain.account.dto.PasswordForm;
-import io.api.lunahouse.domain.account.dto.PasswordFormValidator;
-import io.api.lunahouse.domain.account.dto.Profile;
-import io.api.lunahouse.domain.account.entity.Account;
+import io.api.lunahouse.domain.account.dto.settings.PasswordForm;
+import io.api.lunahouse.domain.account.dto.settings.PasswordFormValidator;
+import io.api.lunahouse.domain.account.dto.settings.Profile;
+import io.api.lunahouse.domain.account.entity.account.Account;
 import io.api.lunahouse.service.AccountService;
 import io.api.lunahouse.util.annotation.CurrentUser;
 import lombok.RequiredArgsConstructor;

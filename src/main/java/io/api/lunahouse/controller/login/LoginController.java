@@ -1,6 +1,6 @@
 package io.api.lunahouse.controller.login;
 
-import io.api.lunahouse.domain.account.entity.Account;
+import io.api.lunahouse.domain.account.entity.account.Account;
 import io.api.lunahouse.util.annotation.CurrentUser;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

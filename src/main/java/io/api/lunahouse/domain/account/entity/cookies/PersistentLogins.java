@@ -1,4 +1,4 @@
-package io.api.lunahouse.domain.account.entity;
+package io.api.lunahouse.domain.account.entity.cookies;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

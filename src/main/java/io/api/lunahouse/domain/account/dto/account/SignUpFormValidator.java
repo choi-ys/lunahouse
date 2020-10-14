@@ -1,4 +1,4 @@
-package io.api.lunahouse.domain.account.dto;
+package io.api.lunahouse.domain.account.dto.account;
 
 import io.api.lunahouse.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
