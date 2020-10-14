@@ -1,4 +1,4 @@
-package io.api.lunahouse.domain.account.dto;
+package io.api.lunahouse.domain.account.dto.settings;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -3,8 +3,8 @@ package io.api.lunahouse.controller.settings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.api.lunahouse.config.WithAccount;
-import io.api.lunahouse.domain.account.dto.Profile;
-import io.api.lunahouse.domain.account.entity.Account;
+import io.api.lunahouse.domain.account.dto.settings.Profile;
+import io.api.lunahouse.domain.account.entity.account.Account;
 import io.api.lunahouse.repository.AccountRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;

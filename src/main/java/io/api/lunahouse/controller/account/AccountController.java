@@ -1,8 +1,8 @@
 package io.api.lunahouse.controller.account;
 
-import io.api.lunahouse.domain.account.dto.SignUpForm;
-import io.api.lunahouse.domain.account.dto.SignUpFormValidator;
-import io.api.lunahouse.domain.account.entity.Account;
+import io.api.lunahouse.domain.account.dto.account.SignUpForm;
+import io.api.lunahouse.domain.account.dto.account.SignUpFormValidator;
+import io.api.lunahouse.domain.account.entity.account.Account;
 import io.api.lunahouse.repository.AccountRepository;
 import io.api.lunahouse.service.AccountServiceImpl;
 import io.api.lunahouse.util.annotation.CurrentUser;

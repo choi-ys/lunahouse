@@ -1,4 +1,4 @@
-package io.api.lunahouse.domain.account.dto;
+package io.api.lunahouse.domain.account.dto.account;
 
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;

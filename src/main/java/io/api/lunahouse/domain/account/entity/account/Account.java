@@ -1,4 +1,4 @@
-package io.api.lunahouse.domain.account.entity;
+package io.api.lunahouse.domain.account.entity.account;
 
 import lombok.*;
 
