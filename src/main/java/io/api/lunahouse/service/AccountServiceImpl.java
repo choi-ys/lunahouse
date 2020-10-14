@@ -101,6 +101,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService{
         account.setUrl(profile.getUrl());
         account.setTeam(profile.getTeam());
         account.setLocation(profile.getLocation());
+        account.setProfileImage(profile.getProfileImage());
         accountRepository.save(account);
     }
 }

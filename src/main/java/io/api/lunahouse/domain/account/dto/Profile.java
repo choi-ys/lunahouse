@@ -24,10 +24,13 @@ public class Profile {
     @Length(max = 255)
     private String location;
 
+    private String profileImage;
+
     public Profile(Account account) {
         this.statusMessage = account.getStatusMessage();
         this.url = account.getUrl();
         this.team = account.getTeam();
         this.location = account.getLocation();
+        this.profileImage = account.getProfileImage();
     }
 }
