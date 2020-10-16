@@ -1,8 +1,10 @@
 package io.api.lunahouse.domain.account.dto.settings;
 
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+@Component
 public class PasswordFormValidator implements Validator {
 
     @Override

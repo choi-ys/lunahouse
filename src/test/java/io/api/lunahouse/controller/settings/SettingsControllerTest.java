@@ -3,6 +3,7 @@ package io.api.lunahouse.controller.settings;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.api.lunahouse.config.WithAccount;
+import io.api.lunahouse.domain.account.dto.settings.PasswordForm;
 import io.api.lunahouse.domain.account.dto.settings.Profile;
 import io.api.lunahouse.domain.account.entity.account.Account;
 import io.api.lunahouse.repository.AccountRepository;
@@ -13,15 +14,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.nio.charset.StandardCharsets;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -39,6 +41,9 @@ class SettingsControllerTest {
 
     @Autowired
     AccountRepository accountRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
 
     @AfterEach
     void cleanRepository(){
@@ -158,4 +163,109 @@ class SettingsControllerTest {
         assertEquals(statusMessage, createdTestAccount.getStatusMessage());
         assertEquals(url, createdTestAccount.getUrl());
     }
+
+    @WithAccount("neol")
+    @Test
+    @DisplayName("Update Password : 비밀번호 수정 화면")
+    public void updatedPassword_view() throws Exception {
+        String urlTemplate = "/settings/password";
+        ResultActions resultActions = this.mockMvc.perform(get(urlTemplate)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(view().name("settings/password"))
+        ;
+    }
+
+    @Test
+    @WithAccount("noel")
+    @DisplayName("Update Password : 입력값이 없는 비밀번호 수정 요청")
+    public void updatePassword_empty_parameter() throws Exception {
+        // Given
+        PasswordForm passwordForm = new PasswordForm();
+
+        // When
+        String urlTemplate = "/settings/password";
+        ResultActions resultActions = this.mockMvc.perform(post(urlTemplate)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(this.objectMapper.writeValueAsString(passwordForm))
+        );
+
+        // Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingsController.SETTINGS_PASSWORD_VIEW_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(authenticated().withUsername("noel"))
+        ;
+    }
+
+    @WithAccount("noel")
+    @Test
+    @DisplayName("Update Password : 입력값이 잘못된 비밀번호 수정 요청")
+    public void updatePassword_worng_parameter() throws Exception {
+        // Given
+        String newPassword = "chldydtjr";
+        String newPasswordConfirm = "chldydtjr1!";
+
+        PasswordForm passwordForm = new PasswordForm();
+        passwordForm.setNewPassword(newPassword);
+        passwordForm.setNewPasswordConfirm(newPasswordConfirm);
+
+        String urlTemplate = "/settings/password";
+        ResultActions resultActions = this.mockMvc.perform(post(urlTemplate)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("newPassword", newPassword)
+                .param("newPasswordConfirm", newPasswordConfirm)
+        );
+
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(view().name(SettingsController.SETTINGS_PASSWORD_VIEW_NAME))
+                .andExpect(model().hasErrors())
+                .andExpect(model().attributeExists("passwordForm"))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(authenticated().withUsername("noel"))
+        ;
+    }
+
+    @WithAccount("noel")
+    @Test
+    @DisplayName("Update Password : 정상적인 비밀번호 수정 요청")
+    public void updatePassword_parameter() throws Exception {
+        // Given
+        String newPassword = "chldydtjr1!";
+        String newPasswordConfirm = "chldydtjr1!";
+
+        PasswordForm passwordForm = new PasswordForm();
+        passwordForm.setNewPassword(newPassword);
+        passwordForm.setNewPasswordConfirm(newPasswordConfirm);
+
+        String urlTemplate = SettingsController.SETTINGS_PASSWORD_URL;
+        ResultActions resultActions = this.mockMvc.perform(post(urlTemplate)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .param("newPassword", newPassword)
+                .param("newPasswordConfirm", newPasswordConfirm)
+        );
+
+        resultActions
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/profile/noel"))
+                .andExpect(redirectedUrl("/profile/noel"))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(authenticated().withUsername("noel"))
+        ;
+
+        Account loginAccount = accountRepository.findByEngName("noel");
+        assertTrue(passwordEncoder.matches(newPassword, loginAccount.getPassword()));
+    }
+
 }
