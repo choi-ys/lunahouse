@@ -1,7 +1,8 @@
 package io.api.lunahouse.service;
 
-import io.api.lunahouse.domain.account.dto.settings.Profile;
 import io.api.lunahouse.domain.account.dto.account.SignUpForm;
+import io.api.lunahouse.domain.account.dto.settings.Notifications;
+import io.api.lunahouse.domain.account.dto.settings.Profile;
 import io.api.lunahouse.domain.account.entity.account.Account;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -21,4 +22,6 @@ public interface AccountService {
     public UserDetails loadUserByUsername(String emailOrEngName) throws UsernameNotFoundException;
 
     void updatePassword(Account account, String newPassword);
+
+    void updateNotifications(Account account, Notifications notifications);
 }

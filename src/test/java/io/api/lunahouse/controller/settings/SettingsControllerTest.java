@@ -209,7 +209,7 @@ class SettingsControllerTest {
     @WithAccount("noel")
     @Test
     @DisplayName("Update Password : 입력값이 잘못된 비밀번호 수정 요청")
-    public void updatePassword_worng_parameter() throws Exception {
+    public void updatePassword_wrong_parameter() throws Exception {
         // Given
         String newPassword = "chldydtjr";
         String newPasswordConfirm = "chldydtjr1!";
@@ -239,7 +239,7 @@ class SettingsControllerTest {
     @WithAccount("noel")
     @Test
     @DisplayName("Update Password : 정상적인 비밀번호 수정 요청")
-    public void updatePassword_parameter() throws Exception {
+    public void updatePassword() throws Exception {
         // Given
         String newPassword = "chldydtjr1!";
         String newPasswordConfirm = "chldydtjr1!";
@@ -268,4 +268,122 @@ class SettingsControllerTest {
         assertTrue(passwordEncoder.matches(newPassword, loginAccount.getPassword()));
     }
 
+    @WithAccount("noel")
+    @Test
+    @DisplayName("Update Notifications : 알림 수정 화면 요청")
+    public void updateNotifications_view() throws Exception {
+        // Given
+        String urlTemplate = SettingsController.SETTINGS_NOTIFICATIONS_URL;
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(get(urlTemplate)
+                .with(csrf())
+        );
+
+        // Then
+        resultActions
+                .andExpect(status().isOk())
+                .andExpect(authenticated().withUsername("noel"))
+                .andExpect(view().name(SettingsController.SETTINGS_NOTIFICATIONS_VIEW_NAME))
+                .andExpect(model().attributeExists("account"))
+                .andExpect(model().attributeExists("notifications"))
+        ;
+    }
+
+    @WithAccount("noel")
+    @Test
+    @DisplayName("Update Notifications : 입력값이 없는 알림 수정 요청")
+    public void updateNotifications_empty_parameter() throws Exception {
+        // Given
+        String urlTemplate = "/settings/notifications";
+
+        // When
+        ResultActions resultActions = this.mockMvc.perform(post(urlTemplate)
+                .with(csrf())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // Then
+        resultActions
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/profile/noel"))
+                .andExpect(redirectedUrl("/profile/noel"))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(authenticated().withUsername("noel"))
+        ;
+    }
+
+    @WithAccount("noel")
+    @Test
+    @DisplayName("Update Notifications : 입력값이 잘못된 알림 수정 요청")
+    public void updateNotifications_wrong_parameter() throws Exception {
+        // Given
+        String eventCreatedByWeb = "0";
+        String eventCreatedByEmail = "1";
+
+        String eventEnrollmentResultByWeb = "false";
+        String eventEnrollmentResultByEmail = "true";
+
+        String eventUpdatedByWeb = "F";
+        String eventUpdatedByEmail = "T";
+
+        // When
+        String urlTemplate = "/settings/notifications";
+        ResultActions resultActions = this.mockMvc.perform(post(urlTemplate)
+                .with(csrf())
+                .param("eventCreatedByWeb", eventCreatedByWeb)
+                .param("eventCreatedByEmail", eventCreatedByEmail)
+                .param("eventEnrollmentResultByWeb", eventEnrollmentResultByWeb)
+                .param("eventEnrollmentResultByEmail", eventEnrollmentResultByEmail)
+                .param("eventUpdatedByWeb", eventUpdatedByWeb)
+                .param("eventUpdatedByEmail", eventUpdatedByEmail)
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // Then
+        resultActions
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/profile/noel"))
+                .andExpect(redirectedUrl("/profile/noel"))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(authenticated().withUsername("noel"))
+        ;
+    }
+
+    @WithAccount("noel")
+    @Test
+    @DisplayName("Update Notifications : 정상적인 알림 수정 요청")
+    public void updateNotifications() throws Exception {
+        // Given
+        boolean eventCreatedByWeb = false;
+        boolean eventCreatedByEmail = true;
+
+        boolean eventEnrollmentResultByWeb = false;
+        boolean eventEnrollmentResultByEmail = true;
+
+        boolean eventUpdatedByWeb = false;
+        boolean eventUpdatedByEmail = true;
+
+        // When
+        String urlTemplate = "/settings/notifications";
+        ResultActions resultActions = this.mockMvc.perform(post(urlTemplate)
+                .with(csrf())
+                .param("eventCreatedByWeb", String.valueOf(eventCreatedByWeb))
+                .param("eventCreatedByEmail", String.valueOf(eventCreatedByEmail))
+                .param("eventEnrollmentResultByWeb", String.valueOf(eventEnrollmentResultByWeb))
+                .param("eventEnrollmentResultByEmail", String.valueOf(eventEnrollmentResultByEmail))
+                .param("eventUpdatedByWeb", String.valueOf(eventUpdatedByWeb))
+                .param("eventUpdatedByEmail", String.valueOf(eventUpdatedByEmail))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+        );
+
+        // Then
+        resultActions
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/profile/noel"))
+                .andExpect(redirectedUrl("/profile/noel"))
+                .andExpect(flash().attributeExists("message"))
+                .andExpect(authenticated().withUsername("noel"))
+        ;
+    }
 }

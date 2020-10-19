@@ -1,5 +1,6 @@
 package io.api.lunahouse.controller.settings;
 
+import io.api.lunahouse.domain.account.dto.settings.Notifications;
 import io.api.lunahouse.domain.account.dto.settings.PasswordForm;
 import io.api.lunahouse.domain.account.dto.settings.PasswordFormValidator;
 import io.api.lunahouse.domain.account.dto.settings.Profile;
@@ -34,6 +35,9 @@ public class SettingsController {
 
     static final String SETTINGS_PASSWORD_VIEW_NAME = "settings/password";
     static final String SETTINGS_PASSWORD_URL = "/settings/password";
+
+    static final String SETTINGS_NOTIFICATIONS_VIEW_NAME = "settings/notifications";
+    static final String SETTINGS_NOTIFICATIONS_URL = "/settings/notifications";
 
     @GetMapping(SETTINGS_PROFILE_URL)
     public String profileUpdateForm(@CurrentUser Account account, Model model){
@@ -85,6 +89,26 @@ public class SettingsController {
 
         accountService.updatePassword(account, passwordForm.getNewPassword());
         attributes.addFlashAttribute("message", "비밀번호가 변경되었습니다.");
+        return "redirect:/profile/"+account.getEngName();
+    }
+
+    @GetMapping(SETTINGS_NOTIFICATIONS_URL)
+    public String updateNotificationsForm(@CurrentUser Account account, Model model) {
+        model.addAttribute(account);
+        model.addAttribute(new Notifications(account));
+        return SETTINGS_NOTIFICATIONS_VIEW_NAME;
+    }
+
+    @PostMapping(SETTINGS_NOTIFICATIONS_URL)
+    public String updateNotifications(@CurrentUser Account account, @Valid Notifications notifications, Errors errors,
+                                      Model model, RedirectAttributes attributes) {
+        if (errors.hasErrors()) {
+            model.addAttribute(account);
+            return SETTINGS_NOTIFICATIONS_VIEW_NAME;
+        }
+
+        accountService.updateNotifications(account, notifications);
+        attributes.addFlashAttribute("message", "알림 설정이 변경 되었습니다.");
         return "redirect:/profile/"+account.getEngName();
     }
 }
