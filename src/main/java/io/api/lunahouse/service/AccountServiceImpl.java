@@ -1,5 +1,6 @@
 package io.api.lunahouse.service;
 
+import io.api.lunahouse.domain.account.dto.settings.Notifications;
 import io.api.lunahouse.domain.account.dto.settings.Profile;
 import io.api.lunahouse.domain.account.dto.account.SignUpForm;
 import io.api.lunahouse.domain.account.entity.account.Account;
@@ -57,7 +58,7 @@ public class AccountServiceImpl implements UserDetailsService, AccountService{
                 .emailVerified(false)
                 .eventCreatedByWeb(true)
                 .eventEnrollmentResultByWeb(true)
-                .eventUpdatedResultByWeb(true)
+                .eventUpdatedByWeb(true)
                 .build();
 
         return accountRepository.save(account);
@@ -108,6 +109,17 @@ public class AccountServiceImpl implements UserDetailsService, AccountService{
     @Override
     public void updatePassword(Account account, String newPassword) {
         account.setPassword(passwordEncoder.encode(newPassword));
+        accountRepository.save(account);
+    }
+
+    @Override
+    public void updateNotifications(Account account, Notifications notifications) {
+        account.setEventCreatedByWeb(notifications.isEventCreatedByWeb());
+        account.setEventCreatedByEmail(notifications.isEventCreatedByEmail());
+        account.setEventUpdatedByWeb(notifications.isEventUpdatedByWeb());
+        account.setEventUpdatedByEmail(notifications.isEventUpdatedByEmail());
+        account.setEventEnrollmentResultByEmail(notifications.isEventEnrollmentResultByEmail());
+        account.setEventEnrollmentResultByWeb(notifications.isEventEnrollmentResultByWeb());
         accountRepository.save(account);
     }
 }

@@ -48,23 +48,23 @@ public class Account {
     @Basic(fetch = FetchType.EAGER)
     private String profileImage;
 
+    // 이벤트 생성 시 웹 수신 여부
+    private boolean eventCreatedByWeb = true;
+
     // 이벤트 생성 시 이메일 수신 여부
     private boolean eventCreatedByEmail;
 
-    // 이벤트 생성 시 웹 수신 여부
-    private boolean eventCreatedByWeb;
+    // 이벤트 등록 시 웹 수신 여부
+    private boolean eventEnrollmentResultByWeb = true;
 
     // 이벤트 등록 시 이메일 수신 여부
     private boolean eventEnrollmentResultByEmail;
 
-    // 이벤트 등록 시 웹 수신 여부
-    private boolean eventEnrollmentResultByWeb;
+    // 이벤트 갱신 시 웹 수신 여부
+    private boolean eventUpdatedByWeb = true;
 
     // 이벤트 갱신 시 이메일 수신 여부
-    private boolean eventUpdatedResultByEmail;
-
-    // 이벤트 갱신 시 웹 수신 여부
-    private boolean eventUpdatedResultByWeb;
+    private boolean eventUpdatedByEmail;
 
     public void generateEmailToken() {
         this.emailCheckToken = UUID.randomUUID().toString();
